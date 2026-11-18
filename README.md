@@ -127,3 +127,8 @@ Add screenshots of the running dashboard and processing page here.
 ## Limitations and future enhancements
 
 The current app uses CSV files rather than a configured MySQL/SQLite metadata database; no individual passenger identities or origin/destination pairs are present in the synthetic schema. Waiting-time gains are not estimated without schedule/headway and observed waiting data. HDFS uploads, Hive execution, YARN metrics and distributed Spark execution require an external configured cluster and are not represented as available by the local demo. Future work: persisted dataset registry/users in SQLite, configurable mapping UI, GIS route geometry, headway-aware waiting models, streaming ingest and authenticated cluster execution.
+
+
+## Deploy on Render
+
+This repository includes a Dockerfile and Render Blueprint. The Docker build compiles the React/Vite UI and packages it with FastAPI as one service. The UI and API share one origin in production. From the Render dashboard choose **New ? Blueprint**, connect `DileepKumar2006/TransitIQ`, select the `main` branch, and apply `render.yaml`. The service health check is `/api/health`. The Blueprint uses the free Singapore region; free services may spin down when idle. Uploaded CSVs and generated cleaned files use ephemeral service storage, so they are not durable across redeploys. The demo sample is packaged with the app.

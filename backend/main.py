@@ -17,6 +17,7 @@ import pandas as pd
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
 
 ROOT = Path(__file__).resolve().parents[1]
 UPLOADS = ROOT / "backend" / "uploads"
@@ -242,3 +243,9 @@ def report(kind: str,dataset: str | None=None,format: str="csv"):
             return StreamingResponse(b,media_type="application/pdf",headers={"Content-Disposition":f"attachment; filename=transitiq_{kind}.pdf"})
         except ImportError: raise HTTPException(501,"Install reportlab to create PDF reports.")
     raise HTTPException(400,"format must be csv or pdf")
+
+
+# In production, serve the compiled React app from the same service as the API.
+FRONTEND_DIST = ROOT / "frontend" / "dist"
+if FRONTEND_DIST.exists():
+    app.mount("/", StaticFiles(directory=FRONTEND_DIST, html=True), name="frontend")
